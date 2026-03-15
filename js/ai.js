@@ -142,10 +142,18 @@ Respond only to policy-related requests.`;
         
         // Add "Use Policy" button for AI responses
         if (!content.startsWith('Sorry')) {
-            formatted += `<button class="btn btn-primary btn-small" style="margin-top:12px" onclick="AI.usePolicy(\`${content.replace(/`/g, '\\`')}\`)">Create Policy from This</button>`;
+            // Encode content for safe use in onclick
+            const encodedContent = encodeURIComponent(content);
+            formatted += `<button class="btn btn-primary btn-small" style="margin-top:12px" data-ai-content="${encodedContent}" onclick="AI.usePolicyFromButton(this)">Create Policy from This</button>`;
         }
         
         return formatted;
+    },
+    
+    usePolicyFromButton(btn) {
+        const encodedContent = btn.getAttribute('data-ai-content');
+        const content = decodeURIComponent(encodedContent);
+        this.usePolicy(content);
     },
     
     showLoading() {

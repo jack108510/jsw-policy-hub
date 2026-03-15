@@ -28,6 +28,16 @@ const Policies = {
         document.getElementById('btn-edit-policy').addEventListener('click', () => this.editCurrentPolicy());
         document.getElementById('btn-view-reads').addEventListener('click', () => this.viewReadReceipts());
         document.getElementById('btn-delete-policy').addEventListener('click', () => this.deleteCurrentPolicy());
+        
+        // Event delegation for policy cards - prevents listener accumulation
+        document.getElementById('recent-policies').addEventListener('click', (e) => {
+            const card = e.target.closest('.policy-card');
+            if (card) this.viewPolicy(card.dataset.id);
+        });
+        document.getElementById('all-policies').addEventListener('click', (e) => {
+            const card = e.target.closest('.policy-card');
+            if (card) this.viewPolicy(card.dataset.id);
+        });
     },
     
     renderPolicyOptions() {
@@ -215,11 +225,7 @@ const Policies = {
         }
         
         container.innerHTML = policies.map(p => this.renderPolicyCard(p)).join('');
-        
-        // Add click handlers
-        container.querySelectorAll('.policy-card').forEach(card => {
-            card.addEventListener('click', () => this.viewPolicy(card.dataset.id));
-        });
+        // Click handling done via event delegation in bindEvents()
     },
     
     renderAllPolicies() {
@@ -251,11 +257,7 @@ const Policies = {
         }
         
         container.innerHTML = policies.map(p => this.renderPolicyCard(p)).join('');
-        
-        // Add click handlers
-        container.querySelectorAll('.policy-card').forEach(card => {
-            card.addEventListener('click', () => this.viewPolicy(card.dataset.id));
-        });
+        // Click handling done via event delegation in bindEvents()
     },
     
     renderPolicyCard(policy) {

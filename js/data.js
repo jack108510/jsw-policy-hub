@@ -211,7 +211,12 @@ To be completed with AI assistance.`,
     
     getPolicy(id) {
         const policies = this.getPolicies();
-        return policies.find(p => p.id === id);
+        const policy = policies.find(p => p.id === id);
+        if (!policy) {
+            console.warn(`Policy with id ${id} not found`);
+            return null;
+        }
+        return policy;
     },
     
     addPolicy(policy) {

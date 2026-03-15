@@ -27,11 +27,14 @@ const Staff = {
             title.textContent = 'Edit Staff';
             document.getElementById('staff-name').value = staff.name;
             document.getElementById('staff-email').value = staff.email;
-            document.getElementById('staff-password').value = staff.password || '';
+            // Security: Don't show password - leave empty for new password entry
+            document.getElementById('staff-password').value = '';
+            document.getElementById('staff-password').placeholder = 'Leave blank to keep current password';
             document.getElementById('staff-role').value = staff.role;
             this.currentStaffId = staffId;
         } else {
             title.textContent = 'Add Staff';
+            document.getElementById('staff-password').placeholder = 'Password';
             this.currentStaffId = null;
         }
         
@@ -50,8 +53,20 @@ const Staff = {
         const role = document.getElementById('staff-role').value;
         
         if (this.currentStaffId) {
-            Data.updateUser(this.currentStaffId, { name, email, password, role });
+            // Only update password if a new one is provided
+            const users = Data.getUsers();
+            const existingUser = users.find(u => u.id === this.currentStaffId);
+            const updates = { name, email, role };
+            if (password) {
+                updates.password = password;
+            }
+            Data.updateUser(this.currentStaffId, updates);
         } else {
+            // New user requires password
+            if (!password) {
+                alert('Password is required for new staff members');
+                return;
+            }
             Data.addUser({ name, email, password, role });
         }
         

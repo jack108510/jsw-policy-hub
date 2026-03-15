@@ -6,13 +6,13 @@ const App = {
         Data.init();
         Auth.init();
         
+        this.bindEvents();
+        
         if (Auth.currentUser) {
             this.showApp();
         } else {
             this.showLogin();
         }
-        
-        this.bindEvents();
     },
     
     bindEvents() {
@@ -50,12 +50,23 @@ const App = {
             document.getElementById('sidebar').classList.toggle('open');
         });
         
-        // Close modals
-        document.querySelectorAll('.modal-close, [data-close]').forEach(btn => {
+        // Close modals - handle both .modal-close and data-close attributes
+        document.querySelectorAll('.modal-close').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const modal = e.target.closest('.modal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        });
+        
+        // Handle data-close buttons
+        document.querySelectorAll('[data-close]').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const modalId = e.target.dataset.close;
                 if (modalId) {
-                    document.getElementById(modalId).classList.add('hidden');
+                    const modal = document.getElementById(modalId);
+                    if (modal) modal.classList.add('hidden');
                 }
             });
         });

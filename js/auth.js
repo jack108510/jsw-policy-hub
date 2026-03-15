@@ -6,9 +6,6 @@ const Auth = {
         const savedUser = localStorage.getItem('jsw_current_user');
         if (savedUser) {
             this.currentUser = JSON.parse(savedUser);
-            App.showApp();
-        } else {
-            App.showLogin();
         }
     },
     
