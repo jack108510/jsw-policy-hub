@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSW Policy Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <div class="login-logo">
+                <span class="logo-icon">📋</span>
+                <h1>JSW Policy Hub</h1>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+                <p class="login-demo">Demo: admin@jsw.com / admin123</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="app hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menu-toggle">☰</button>
+                <div class="logo">
+                    <span class="logo-icon">📋</span>
+                    <span class="logo-text">JSW Policy Hub</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="user-badge" id="user-badge"></span>
+                <button class="btn btn-outline" id="logout-btn">Logout</button>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="nav">
+                <a href="#" class="nav-item active" data-view="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-view="policies">
+                    <span class="nav-icon">📄</span>
+                    <span class="nav-text">Policies</span>
+                    <span class="nav-badge" id="policy-count-badge">0</span>
+                </a>
+                <a href="#" class="nav-item" data-view="ai-assistant" id="nav-ai">
+                    <span class="nav-icon">🤖</span>
+                    <span class="nav-text">AI Assistant</span>
+                </a>
+                <a href="#" class="nav-item" data-view="staff" id="nav-staff">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">Staff</span>
+                </a>
+                <a href="#" class="nav-item" data-view="settings" id="nav-settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+            <!-- Dashboard View -->
+            <section id="view-dashboard" class="view active">
+                <div class="view-header">
+                    <h1>Dashboard</h1>
+                </div>
+                <div class="stats-grid" id="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📄</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-total">0</span>
+                            <span class="stat-label">Total Policies</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-published">0</span>
+                            <span class="stat-label">Published</span>
+                        </div>
+                    </div>
+                    <div class="stat-card" id="stat-unread-card">
+                        <div class="stat-icon">📩</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-unread">0</span>
+                            <span class="stat-label">Unread</span>
+                        </div>
+                    </div>
+                    <div class="stat-card" id="stat-staff-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-staff">0</span>
+                            <span class="stat-label">Staff Members</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Recent Policies</h2>
+                        <button class="btn btn-primary" id="btn-new-policy">+ New Policy</button>
+                    </div>
+                    <div class="policy-list" id="recent-policies"></div>
+                </div>
+            </section>
+
+            <!-- Policies View -->
+            <section id="view-policies" class="view">
+                <div class="view-header">
+                    <h1>Policies</h1>
+                    <div class="view-actions">
+                        <select id="filter-category" class="select">
+                            <option value="">All Categories</option>
+                        </select>
+                        <select id="filter-status" class="select">
+                            <option value="">All Status</option>
+                            <option value="draft">Draft</option>
+                            <option value="published">Published</option>
+                        </select>
+                        <button class="btn btn-primary" id="btn-new-policy-2">+ New Policy</button>
+                    </div>
+                </div>
+                <div class="policy-list" id="all-policies"></div>
+            </section>
+
+            <!-- Policy Editor Modal -->
+            <div id="policy-modal" class="modal hidden">
+                <div class="modal-overlay"></div>
+                <div class="modal-content modal-large">
+                    <div class="modal-header">
+                        <h2 id="policy-modal-title">New Policy</h2>
+                        <button class="modal-close" data-close="policy-modal">×</button>
+                    </div>
+                    <form id="policy-form" class="policy-form">
+                        <div class="form-row">
+                            <div class="form-group flex-2">
+                                <label for="policy-title">Title</label>
+                                <input type="text" id="policy-title" required placeholder="Policy title">
+                            </div>
+                            <div class="form-group">
+                                <label for="policy-category">Category</label>
+                                <select id="policy-category" required></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="policy-priority">Priority</label>
+                            <div class="priority-options">
+                                <label class="priority-option">
+                                    <input type="radio" name="priority" value="normal" checked>
+                                    <span class="priority-badge priority-normal">Normal</span>
+                                </label>
+                                <label class="priority-option">
+                                    <input type="radio" name="priority" value="important">
+                                    <span class="priority-badge priority-important">Important</span>
+                                </label>
+                                <label class="priority-option">
+                                    <input type="radio" name="priority" value="urgent">
+                                    <span class="priority-badge priority-urgent">Urgent</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="policy-content">Content</label>
+                            <textarea id="policy-content" rows="12" placeholder="Write your policy content here..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" data-close="policy-modal">Cancel</button>
+                            <button type="submit" name="action" value="draft" class="btn btn-secondary">Save Draft</button>
+                            <button type="submit" name="action" value="publish" class="btn btn-primary">Publish</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Policy View Modal -->
+            <div id="policy-view-modal" class="modal hidden">
+                <div class="modal-overlay"></div>
+                <div class="modal-content modal-large">
+                    <div class="modal-header">
+                        <h2 id="view-policy-title">Policy Title</h2>
+                        <button class="modal-close" data-close="policy-view-modal">×</button>
+                    </div>
+                    <div class="policy-view">
+                        <div class="policy-meta">
+                            <span class="policy-category-badge" id="view-policy-category"></span>
+                            <span class="policy-priority-badge" id="view-policy-priority"></span>
+                            <span class="policy-date" id="view-policy-date"></span>
+                        </div>
+                        <div class="policy-body" id="view-policy-content"></div>
+                        <div class="policy-actions" id="view-policy-actions">
+                            <button class="btn btn-outline" id="btn-edit-policy">Edit</button>
+                            <button class="btn btn-outline" id="btn-view-reads">View Read Receipts</button>
+                            <button class="btn btn-danger" id="btn-delete-policy">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Read Receipts Modal -->
+            <div id="reads-modal" class="modal hidden">
+                <div class="modal-overlay"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Read Receipts</h2>
+                        <button class="modal-close" data-close="reads-modal">×</button>
+                    </div>
+                    <div class="reads-list" id="reads-list"></div>
+                </div>
+            </div>
+
+            <!-- AI Assistant View -->
+            <section id="view-ai-assistant" class="view">
+                <div class="view-header">
+                    <h1>AI Assistant</h1>
+                </div>
+                <div class="ai-container">
+                    <div class="ai-setup" id="ai-setup">
+                        <p>Configure your OpenAI API key to enable AI policy generation.</p>
+                        <div class="form-group">
+                            <label for="api-key-input">OpenAI API Key</label>
+                            <input type="password" id="api-key-input" placeholder="sk-...">
+                        </div>
+                        <button class="btn btn-primary" id="btn-save-api-key">Save API Key</button>
+                        <p class="help-text">Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a></p>
+                    </div>
+                    <div class="ai-chat hidden" id="ai-chat">
+                        <div class="ai-messages" id="ai-messages">
+                            <div class="ai-message ai-message-bot">
+                                <div class="message-avatar">🤖</div>
+                                <div class="message-content">
+                                    <p>Hello! I'm your AI policy assistant. Describe the policy you need, and I'll help you create it.</p>
+                                    <p>For example: "Create a remote work policy for our company"</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ai-input-container">
+                            <input type="text" id="ai-input" placeholder="Describe the policy you need...">
+                            <button class="btn btn-primary" id="btn-send-ai">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Staff View -->
+            <section id="view-staff" class="view">
+                <div class="view-header">
+                    <h1>Staff Management</h1>
+                    <button class="btn btn-primary" id="btn-add-staff">+ Add Staff</button>
+                </div>
+                <div class="staff-table-container">
+                    <table class="staff-table" id="staff-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staff-tbody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Staff Modal -->
+            <div id="staff-modal" class="modal hidden">
+                <div class="modal-overlay"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 id="staff-modal-title">Add Staff</h2>
+                        <button class="modal-close" data-close="staff-modal">×</button>
+                    </div>
+                    <form id="staff-form">
+                        <div class="form-group">
+                            <label for="staff-name">Name</label>
+                            <input type="text" id="staff-name" required placeholder="Full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="staff-email">Email</label>
+                            <input type="email" id="staff-email" required placeholder="Email address">
+                        </div>
+                        <div class="form-group">
+                            <label for="staff-password">Password</label>
+                            <input type="password" id="staff-password" required placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="staff-role">Role</label>
+                            <select id="staff-role">
+                                <option value="staff">Staff</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" data-close="staff-modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <section id="view-settings" class="view">
+                <div class="view-header">
+                    <h1>Settings</h1>
+                </div>
+                <div class="settings-section">
+                    <h3>Categories</h3>
+                    <div class="category-list" id="category-list"></div>
+                    <form id="category-form" class="inline-form">
+                        <input type="text" id="new-category" placeholder="New category name" required>
+                        <input type="color" id="new-category-color" value="#3D5A80">
+                        <button type="submit" class="btn btn-secondary">Add</button>
+                    </form>
+                </div>
+                <div class="settings-section">
+                    <h3>Data Management</h3>
+                    <button class="btn btn-outline" id="btn-export-data">Export Data</button>
+                    <button class="btn btn-outline" id="btn-import-data">Import Data</button>
+                    <input type="file" id="import-file" accept=".json" class="hidden">
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/policies.js"></script>
+    <script src="js/staff.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
