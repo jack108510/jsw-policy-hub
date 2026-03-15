@@ -23,6 +23,13 @@ const Policies = {
         // Filter changes
         document.getElementById('filter-category').addEventListener('change', () => this.renderAllPolicies());
         document.getElementById('filter-status').addEventListener('change', () => this.renderAllPolicies());
+        document.getElementById('filter-location').addEventListener('change', () => this.renderAllPolicies());
+        document.getElementById('filter-policy-type').addEventListener('change', () => this.renderAllPolicies());
+        
+        // Search
+        document.getElementById('search-policies').addEventListener('input', (e) => {
+            this.renderAllPolicies();
+        });
         
         // View policy actions
         document.getElementById('btn-edit-policy').addEventListener('click', () => this.editCurrentPolicy());
@@ -70,7 +77,9 @@ const Policies = {
             const policy = Data.getPolicy(policyId);
             title.textContent = 'Edit Policy';
             document.getElementById('policy-title').value = policy.title;
-            document.getElementById('policy-category').value = policy.category;
+            document.getElementById('policy-category').value = policy.category || '';
+            document.getElementById('policy-location').value = policy.clinicLocation || '';
+            document.getElementById('policy-type').value = policy.policyType || '';
             document.getElementById('policy-content').value = policy.content;
             document.querySelector(`input[name="priority"][value="${policy.priority}"]`).checked = true;
             this.currentPolicyId = policyId;
@@ -90,12 +99,16 @@ const Policies = {
     savePolicy(action) {
         const title = document.getElementById('policy-title').value.trim();
         const category = document.getElementById('policy-category').value;
+        const location = document.getElementById('policy-location').value;
+        const policyType = document.getElementById('policy-type').value;
         const content = document.getElementById('policy-content').value.trim();
         const priority = document.querySelector('input[name="priority"]:checked').value;
         
         const policyData = {
             title,
             category,
+            clinicLocation: location,
+            policyType: policyType,
             content,
             priority,
             status: action === 'publish' ? 'published' : 'draft',
@@ -135,6 +148,24 @@ const Policies = {
         const categoryBadge = document.getElementById('view-policy-category');
         categoryBadge.textContent = policy.category;
         categoryBadge.style.backgroundColor = category?.color || '#6B7280';
+        
+        // Policy Type badge
+        const typeBadge = document.getElementById('view-policy-type');
+        if (policy.policyType) {
+            typeBadge.textContent = policy.policyType;
+            typeBadge.style.display = 'inline-block';
+        } else {
+            typeBadge.style.display = 'none';
+        }
+        
+        // Location badge
+        const locationBadge = document.getElementById('view-policy-location');
+        if (policy.clinicLocation) {
+            locationBadge.textContent = policy.clinicLocation;
+            locationBadge.style.display = 'inline-block';
+        } else {
+            locationBadge.style.display = 'none';
+        }
         
         // Priority badge
         const priorityBadge = document.getElementById('view-policy-priority');
@@ -231,8 +262,19 @@ const Policies = {
     renderAllPolicies() {
         const categoryFilter = document.getElementById('filter-category').value;
         const statusFilter = document.getElementById('filter-status').value;
+        const locationFilter = document.getElementById('filter-location').value;
+        const typeFilter = document.getElementById('filter-policy-type').value;
+        const searchQuery = document.getElementById('search-policies').value.toLowerCase();
         
         let policies = Data.getPolicies();
+        
+        // Apply search filter
+        if (searchQuery) {
+            policies = policies.filter(p => 
+                p.title.toLowerCase().includes(searchQuery) || 
+                p.content.toLowerCase().includes(searchQuery)
+            );
+        }
         
         if (categoryFilter) {
             policies = policies.filter(p => p.category === categoryFilter);
@@ -240,6 +282,14 @@ const Policies = {
         
         if (statusFilter) {
             policies = policies.filter(p => p.status === statusFilter);
+        }
+        
+        if (locationFilter) {
+            policies = policies.filter(p => p.clinicLocation === locationFilter);
+        }
+        
+        if (typeFilter) {
+            policies = policies.filter(p => p.policyType === typeFilter);
         }
         
         // For staff, show only published
@@ -271,12 +321,20 @@ const Policies = {
             readStatusHtml = `<span class="read-status ${hasRead ? 'read' : 'unread'}">${hasRead ? '✓ Read' : '○ Unread'}</span>`;
         }
         
+        // Location and type badges
+        const locationBadge = policy.clinicLocation ? `<span class="policy-location-badge-small">📍 ${policy.clinicLocation}</span>` : '';
+        const typeBadge = policy.policyType ? `<span class="policy-type-badge-small">📁 ${policy.policyType}</span>` : '';
+        
         return `
             <div class="policy-card priority-${policy.priority}" data-id="${policy.id}">
                 <div class="policy-card-header">
                     <h3 class="policy-card-title">${policy.title}</h3>
                 </div>
                 <p class="policy-card-excerpt">${policy.content.substring(0, 150)}...</p>
+                <div class="policy-card-badges">
+                    ${typeBadge}
+                    ${locationBadge}
+                </div>
                 <div class="policy-card-footer">
                     <div class="policy-meta">
                         <span class="policy-category-badge" style="background-color: ${category?.color || '#6B7280'}">${policy.category}</span>

@@ -11,11 +11,39 @@ const App = {
         if (Auth.currentUser) {
             this.showApp();
         } else {
-            this.showLogin();
+            this.showLanding();
         }
     },
     
     bindEvents() {
+        // Landing page buttons
+        document.getElementById('btn-start-trial').addEventListener('click', () => {
+            this.showSignup();
+        });
+        
+        document.getElementById('btn-try-demo').addEventListener('click', () => {
+            // Auto-login as demo admin
+            const result = Auth.login('admin@jsw.com', 'admin123');
+            if (result.success) {
+                this.showApp();
+            }
+        });
+        
+        document.getElementById('landing-login-btn').addEventListener('click', () => {
+            this.showLogin();
+        });
+        
+        // Switch between login and signup
+        document.getElementById('switch-to-signup').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showSignup();
+        });
+        
+        document.getElementById('switch-to-login').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showLogin();
+        });
+        
         // Login form
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -25,6 +53,24 @@ const App = {
             const result = Auth.login(email, password);
             
             if (result.success) {
+                this.showApp();
+            } else {
+                alert(result.message);
+            }
+        });
+        
+        // Signup form
+        document.getElementById('signup-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const location = document.getElementById('signup-location').value;
+            
+            const result = Auth.signup(name, email, password, location);
+            
+            if (result.success) {
+                alert(result.message);
                 this.showApp();
             } else {
                 alert(result.message);
@@ -91,18 +137,41 @@ const App = {
         document.getElementById('import-file').addEventListener('change', (e) => this.importData(e));
     },
     
+    showLanding() {
+        document.getElementById('landing-screen').classList.remove('hidden');
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('signup-screen').classList.add('hidden');
+        document.getElementById('app').classList.add('hidden');
+    },
+    
     showLogin() {
+        document.getElementById('landing-screen').classList.add('hidden');
         document.getElementById('login-screen').classList.remove('hidden');
+        document.getElementById('signup-screen').classList.add('hidden');
+        document.getElementById('app').classList.add('hidden');
+    },
+    
+    showSignup() {
+        document.getElementById('landing-screen').classList.add('hidden');
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('signup-screen').classList.remove('hidden');
         document.getElementById('app').classList.add('hidden');
     },
     
     showApp() {
+        document.getElementById('landing-screen').classList.add('hidden');
         document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('signup-screen').classList.add('hidden');
         document.getElementById('app').classList.remove('hidden');
         
         // Update user badge
         const user = Auth.getCurrentUser();
-        document.getElementById('user-badge').textContent = `${user.name} (${user.role})`;
+        let badgeText = user.name;
+        if (user.clinicLocation) {
+            badgeText += ` (${user.clinicLocation})`;
+        }
+        badgeText += ` [${user.role}]`;
+        document.getElementById('user-badge').textContent = badgeText;
         
         // Show/hide admin features
         this.updateAdminFeatures();

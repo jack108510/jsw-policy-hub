@@ -34,7 +34,7 @@ const Data = {
         ];
         localStorage.setItem(this.KEYS.CATEGORIES, JSON.stringify(categories));
         
-        // Seed policies
+        // Seed policies with new fields
         const policies = [
             {
                 id: 'policy_1',
@@ -71,6 +71,8 @@ POLICY
 EFFECTIVE DATE
 This policy is effective immediately.`,
                 category: 'HR',
+                policyType: 'Admin',
+                clinicLocation: 'Tudor Glen',
                 priority: 'important',
                 status: 'published',
                 authorId: 'user_1',
@@ -107,6 +109,8 @@ GUIDELINES
    - Use incident report form
    - Document all incidents`,
                 category: 'Safety',
+                policyType: 'SOG',
+                clinicLocation: 'River Valley',
                 priority: 'urgent',
                 status: 'published',
                 authorId: 'user_1',
@@ -138,6 +142,8 @@ REIMBURSEMENT PROCESS
 3. Submit to finance department
 4. Processing time: 2 weeks`,
                 category: 'Finance',
+                policyType: 'Admin',
+                clinicLocation: 'Rosslyn',
                 priority: 'normal',
                 status: 'published',
                 authorId: 'user_1',
@@ -155,6 +161,8 @@ This is a draft policy regarding social media usage...
 
 To be completed with AI assistance.`,
                 category: 'General',
+                policyType: 'Memos',
+                clinicLocation: 'UPC',
                 priority: 'normal',
                 status: 'draft',
                 authorId: 'user_1',

@@ -10,8 +10,87 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <!-- Landing Page -->
+    <div id="landing-screen" class="landing-screen">
+        <div class="landing-container">
+            <div class="landing-header">
+                <div class="landing-logo">
+                    <span class="logo-icon">📋</span>
+                    <span class="logo-text">JSW Policy Hub</span>
+                </div>
+                <div class="landing-nav">
+                    <button class="btn btn-outline btn-login" id="landing-login-btn">Sign In</button>
+                </div>
+            </div>
+            
+            <div class="landing-hero">
+                <div class="hero-content">
+                    <span class="hero-badge">Enterprise Policy Management</span>
+                    <h1>Modern Policy Management for JSW Enterprises</h1>
+                    <p>Streamline your policy creation, distribution, and tracking with AI-powered tools. Replace paper memos with a digital solution that keeps your team informed.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-large" id="btn-start-trial">Start Free Trial</button>
+                        <button class="btn btn-secondary btn-large" id="btn-try-demo">Try Demo</button>
+                    </div>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">🤖</span>
+                            <span>AI-Powered Creation</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📊</span>
+                            <span>Read Tracking</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🏥</span>
+                            <span>Multi-Location Support</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="demo-preview">
+                        <div class="preview-header">
+                            <span class="preview-dot red"></span>
+                            <span class="preview-dot yellow"></span>
+                            <span class="preview-dot green"></span>
+                            <span class="preview-title">JSW Policy Hub</span>
+                        </div>
+                        <div class="preview-content">
+                            <div class="preview-stat">📄 24 Policies</div>
+                            <div class="preview-stat">✅ 18 Published</div>
+                            <div class="preview-stat">📩 6 Unread</div>
+                            <div class="preview-stat">👥 12 Staff</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="landing-features">
+                <div class="feature-card">
+                    <div class="feature-card-icon">🏥</div>
+                    <h3>Clinic Locations</h3>
+                    <p>Filter policies by location: Tudor Glen, River Valley, Rosslyn, and UPC</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">🔍</div>
+                    <h3>Smart Search</h3>
+                    <p>Find any policy instantly with powerful text search</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">📁</div>
+                    <h3>Policy Types</h3>
+                    <p>Organize with Admin, SOG, and Memos categories</p>
+                </div>
+            </div>
+            
+            <div class="landing-footer">
+                <p>&copy; 2025 JSW Enterprises. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Login Screen -->
-    <div id="login-screen" class="login-screen">
+    <div id="login-screen" class="login-screen hidden">
         <div class="login-container">
             <div class="login-logo">
                 <span class="logo-icon">📋</span>
@@ -28,6 +107,44 @@
                 </div>
                 <button type="submit" class="btn btn-primary btn-full">Sign In</button>
                 <p class="login-demo">Demo: admin@jsw.com / admin123</p>
+                <p class="login-switch">Don't have an account? <a href="#" id="switch-to-signup">Sign up</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sign Up Screen -->
+    <div id="signup-screen" class="login-screen hidden">
+        <div class="login-container">
+            <div class="login-logo">
+                <span class="logo-icon">📋</span>
+                <h1>Create Account</h1>
+            </div>
+            <p class="signup-subtitle">Start your 14-day free trial</p>
+            <form id="signup-form" class="login-form">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" required placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" required placeholder="Create a password">
+                </div>
+                <div class="form-group">
+                    <label for="signup-location">Clinic Location</label>
+                    <select id="signup-location" required>
+                        <option value="">Select Location</option>
+                        <option value="Tudor Glen">Tudor Glen</option>
+                        <option value="River Valley">River Valley</option>
+                        <option value="Rosslyn">Rosslyn</option>
+                        <option value="UPC">UPC</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Start Free Trial</button>
+                <p class="login-switch">Already have an account? <a href="#" id="switch-to-login">Sign in</a></p>
             </form>
         </div>
     </div>
@@ -128,6 +245,23 @@
                 <div class="view-header">
                     <h1>Policies</h1>
                     <div class="view-actions">
+                        <div class="search-container">
+                            <input type="text" id="search-policies" class="search-input" placeholder="Search policies...">
+                            <span class="search-icon">🔍</span>
+                        </div>
+                        <select id="filter-location" class="select">
+                            <option value="">All Locations</option>
+                            <option value="Tudor Glen">Tudor Glen</option>
+                            <option value="River Valley">River Valley</option>
+                            <option value="Rosslyn">Rosslyn</option>
+                            <option value="UPC">UPC</option>
+                        </select>
+                        <select id="filter-policy-type" class="select">
+                            <option value="">All Types</option>
+                            <option value="Admin">Admin</option>
+                            <option value="SOG">SOG</option>
+                            <option value="Memos">Memos</option>
+                        </select>
                         <select id="filter-category" class="select">
                             <option value="">All Categories</option>
                         </select>
@@ -159,6 +293,27 @@
                             <div class="form-group">
                                 <label for="policy-category">Category</label>
                                 <select id="policy-category" required></select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="policy-location">Clinic Location</label>
+                                <select id="policy-location">
+                                    <option value="">All Locations</option>
+                                    <option value="Tudor Glen">Tudor Glen</option>
+                                    <option value="River Valley">River Valley</option>
+                                    <option value="Rosslyn">Rosslyn</option>
+                                    <option value="UPC">UPC</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="policy-type">Policy Type</label>
+                                <select id="policy-type">
+                                    <option value="">Select Type</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="SOG">SOG</option>
+                                    <option value="Memos">Memos</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
@@ -202,6 +357,8 @@
                     <div class="policy-view">
                         <div class="policy-meta">
                             <span class="policy-category-badge" id="view-policy-category"></span>
+                            <span class="policy-type-badge" id="view-policy-type"></span>
+                            <span class="policy-location-badge" id="view-policy-location"></span>
                             <span class="policy-priority-badge" id="view-policy-priority"></span>
                             <span class="policy-date" id="view-policy-date"></span>
                         </div>
